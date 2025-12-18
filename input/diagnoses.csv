@@ -1,0 +1,7 @@
+V001,D001,Hypertension
+V001,D002,Diabetes Mellitus
+V002,D003,Fracture of Arm
+V003,D002,Diabetes Mellitus
+V004,D004,Heart Failure
+V005,D002,Diabetes Mellitus
+V006,D005,Lower Back Pain

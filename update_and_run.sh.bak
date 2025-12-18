@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# === Set Hadoop and Java environment for this script ===
+export HADOOP_HOME=/home/hadoop/Hadoop
+export HADOOP_PREFIX=$HADOOP_HOME
+export HADOOP_LIBEXEC_DIR=$HADOOP_HOME/libexec
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+
+cd ~/healthcare-hadoop
+
+echo ">>> Downloading latest patient_visits.csv from Google Sheets..."
+
+wget -q -O input/patient_visits.csv "https://docs.google.com/spreadsheets/d/e/2PACX-1vTalZNrqlO5ats_tAlnNOWItVFl7sNrtoFVS2I-JKgwxRhU03X2yHrfUoXcEW1IShSGKRNH_rREVu04/pub?gid=1183394350&single=true&output=csv"
+
+if [ $? -ne 0 ]; then
+  echo "!!! ERROR: Download failed. Check Internet connection or CSV link."
+  exit 1
+fi
+
+echo ">>> Running Length of Stay KPI..."
+rm -rf output/los
+/home/hadoop/Hadoop/bin/hadoop jar healthcare_kpi.jar \
+  org.healthcare.kpi.LengthOfStayMR \
+  input/patient_visits.csv \
+  output/los
+
+echo ">>> Running Frequent Diagnoses KPI..."
+rm -rf output/diag_counts
+/home/hadoop/Hadoop/bin/hadoop jar healthcare_kpi.jar \
+  org.healthcare.kpi.FrequentDiagnosesMR \
+  input/patient_visits.csv \
+  output/diag_counts
+
+
+echo ">>> Running Readmission Rate KPI..."
+rm -rf output/readmission
+/home/hadoop/Hadoop/bin/hadoop jar healthcare_kpi.jar \
+  org.healthcare.kpi.ReadmissionRateMR \
+  input/patient_visits.csv \
+  output/readmission
+
+echo
+echo "===== LATEST KPIs (BASED ON GOOGLE FORM ENTRIES) ====="
+echo
+
+echo "--- Length of Stay ---"
+cat output/los/part-r-00000 || echo "LOS output not found."
+
+echo
+echo "--- Frequent Diagnoses ---"
+cat output/diag_counts/part-r-00000 || echo "Diagnosis output not found."
+
+echo
+echo "--- Readmission Rate ---"
+cat output/readmission/part-r-00000 || echo "Readmission output not found."
+
+echo
+echo "======================================================"

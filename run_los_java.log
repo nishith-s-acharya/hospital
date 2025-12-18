@@ -1,0 +1,16 @@
+2025-12-12 17:26:47,741 WARN  [main] util.NativeCodeLoader (NativeCodeLoader.java:<clinit>(60)) - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+2025-12-12 17:26:48,067 INFO  [main] impl.MetricsConfig (MetricsConfig.java:loadFirst(122)) - Loaded properties from hadoop-metrics2.properties
+2025-12-12 17:26:48,382 INFO  [main] impl.MetricsSystemImpl (MetricsSystemImpl.java:startTimer(378)) - Scheduled Metric snapshot period at 0 second(s).
+2025-12-12 17:26:48,395 INFO  [main] impl.MetricsSystemImpl (MetricsSystemImpl.java:start(191)) - JobTracker metrics system started
+Exception in thread "main" org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory file:/home/hadoop/healthcare-hadoop/output/los already exists
+	at org.apache.hadoop.mapreduce.lib.output.FileOutputFormat.checkOutputSpecs(FileOutputFormat.java:164)
+	at org.apache.hadoop.mapreduce.JobSubmitter.checkSpecs(JobSubmitter.java:278)
+	at org.apache.hadoop.mapreduce.JobSubmitter.submitJobInternal(JobSubmitter.java:142)
+	at org.apache.hadoop.mapreduce.Job$11.run(Job.java:1677)
+	at org.apache.hadoop.mapreduce.Job$11.run(Job.java:1674)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:714)
+	at java.base/javax.security.auth.Subject.doAs(Subject.java:525)
+	at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1953)
+	at org.apache.hadoop.mapreduce.Job.submit(Job.java:1674)
+	at org.apache.hadoop.mapreduce.Job.waitForCompletion(Job.java:1695)
+	at org.healthcare.kpi.LengthOfStayMR.main(LengthOfStayMR.java:142)

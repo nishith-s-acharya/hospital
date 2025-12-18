@@ -1,0 +1,6 @@
+WARNING: log4j.properties is not found. HADOOP_CONF_DIR may be incomplete.
+Exception in thread "main" java.lang.ClassNotFoundException: -Dfs/defaultFS=file:///
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at org.apache.hadoop.util.RunJar.run(RunJar.java:323)
+	at org.apache.hadoop.util.RunJar.main(RunJar.java:245)

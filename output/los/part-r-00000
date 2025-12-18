@@ -1,0 +1,4 @@
+Cardiology	Total_LOS_Days=1, Visit_Count=1, Avg_LOS_Days=1.00
+General Medicine	Total_LOS_Days=8, Visit_Count=2, Avg_LOS_Days=4.00
+Neurology	Total_LOS_Days=20, Visit_Count=3, Avg_LOS_Days=6.67
+Orthopedics	Total_LOS_Days=22, Visit_Count=2, Avg_LOS_Days=11.00
