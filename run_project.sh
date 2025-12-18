@@ -34,7 +34,14 @@ echo "==========================================="
 mkdir -p input
 
 echo ">>> Downloading latest patient_visits.csv ..."
-curl -L -o input/patient_visits.csv "$CSV_URL"
+if command -v curl &> /dev/null; then
+    curl -L -o input/patient_visits.csv "$CSV_URL"
+elif command -v wget &> /dev/null; then
+    wget -q -O input/patient_visits.csv "$CSV_URL"
+else
+    echo "Error: Neither curl nor wget found. Please install one of them."
+    exit 1
+fi
 
 if [ $? -ne 0 ]; then
     echo "FAILED TO DOWNLOAD CSV. Check the URL."
