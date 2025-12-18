@@ -58,6 +58,10 @@ echo "==========================================="
 # Cleanup old outputs
 rm -rf output/los output/diag_counts output/readmission
 
+echo "==========================================="
+echo " Compiling Java Code"
+echo "==========================================="
+
 # Find Hadoop executable
 if [ -n "$HADOOP_HOME" ] && [ -x "$HADOOP_HOME/bin/hadoop" ]; then
     HADOOP_CMD="$HADOOP_HOME/bin/hadoop"
@@ -70,6 +74,24 @@ else
 fi
 
 echo "Using Hadoop command: $HADOOP_CMD"
+
+# Get Hadoop Classpath
+export HADOOP_CLASSPATH=$($HADOOP_CMD classpath)
+
+mkdir -p classes
+echo ">>> Compiling sources..."
+javac -d classes -cp "$HADOOP_CLASSPATH" src/org/healthcare/kpi/*.java
+
+if [ $? -ne 0 ]; then
+    echo "COMPILATION FAILED!"
+    exit 1
+fi
+
+echo ">>> Creating JAR file..."
+jar -cvf $JAR_NAME -C classes .
+
+echo "Build successful."
+echo ""
 
 # 1 Length of Stay
 echo ">>> Running Length of Stay KPI..."
