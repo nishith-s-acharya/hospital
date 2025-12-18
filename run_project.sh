@@ -58,23 +58,36 @@ echo "==========================================="
 # Cleanup old outputs
 rm -rf output/los output/diag_counts output/readmission
 
+# Find Hadoop executable
+if [ -n "$HADOOP_HOME" ] && [ -x "$HADOOP_HOME/bin/hadoop" ]; then
+    HADOOP_CMD="$HADOOP_HOME/bin/hadoop"
+elif command -v hadoop &> /dev/null; then
+    HADOOP_CMD="hadoop"
+else
+    echo "Error: Hadoop not found!"
+    echo "Please set HADOOP_HOME or ensure 'hadoop' is in your PATH."
+    exit 1
+fi
+
+echo "Using Hadoop command: $HADOOP_CMD"
+
 # 1 Length of Stay
 echo ">>> Running Length of Stay KPI..."
-"$HADOOP_HOME/bin/hadoop" jar $JAR_NAME \
+"$HADOOP_CMD" jar $JAR_NAME \
   org.healthcare.kpi.LengthOfStayMR \
   input/patient_visits.csv \
   output/los
 
 # 2 Frequent Diagnoses
 echo ">>> Running Frequent Diagnoses KPI..."
-"$HADOOP_HOME/bin/hadoop" jar $JAR_NAME \
+"$HADOOP_CMD" jar $JAR_NAME \
   org.healthcare.kpi.FrequentDiagnosesMR \
   input/patient_visits.csv \
   output/diag_counts
 
 # 3 Readmission Rate
 echo ">>> Running Readmission Rate KPI..."
-"$HADOOP_HOME/bin/hadoop" jar $JAR_NAME \
+"$HADOOP_CMD" jar $JAR_NAME \
   org.healthcare.kpi.ReadmissionRateMR \
   input/patient_visits.csv \
   output/readmission
