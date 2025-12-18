@@ -1,12 +1,25 @@
 #!/bin/bash
 
-# Force Java 17
-export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+# Detect OS and set JAVA_HOME
+OS="$(uname -s)"
+if [ "$OS" = "Darwin" ]; then
+    # macOS
+    export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+elif [ "$OS" = "Linux" ]; then
+    # Linux (Ubuntu/Debian)
+    if [ -d "/usr/lib/jvm/java-17-openjdk-amd64" ]; then
+        export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+    elif [ -d "/usr/lib/jvm/java-17-openjdk" ]; then
+        export JAVA_HOME="/usr/lib/jvm/java-17-openjdk"
+    fi
+fi
+
 echo "Using JAVA_HOME: $JAVA_HOME"
 
 # Check if JAVA_HOME is valid
 if [ -z "$JAVA_HOME" ]; then
-    echo "Java 17 not found! Please install Java 17 or adjustment the script."
+    echo "Java 17 not found! Please ensure Java 17 is installed."
+    echo "On Ubuntu: sudo apt install openjdk-17-jdk"
     exit 1
 fi
 
